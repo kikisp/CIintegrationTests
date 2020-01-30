@@ -1,0 +1,23 @@
+server:
+   servlet:
+      contextPath: /CarWashAgent
+spring:
+   jpa:
+      show-sql: true
+      open-in-view: false
+      hibernate:
+         ddl-auto: create-drop
+      properties:
+         hibernate.dialect: org.hibernate.dialect.PostgreSQL10Dialect
+   datasource:
+      hikari:
+         connectionTimeout: 20000
+         maximumPoolSize: 5
+      url: jdbc:postgresql://localhost:5432/backend?currentSchema=car_wash
+      username: postgres
+      password: root
+              
+
+
+
+

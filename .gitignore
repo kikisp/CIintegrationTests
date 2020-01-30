@@ -14,6 +14,7 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+HELP.md
 
 # External tool builders
 .externalToolBuilders/
@@ -47,6 +48,7 @@ local.properties
 
 # STS (Spring Tool Suite)
 .springBeans
+.sts4-cache/ 
 
 # Code Recommenders
 .recommenders/
@@ -68,8 +70,6 @@ local.properties
 
 # Annotation Processing
 .apt_generated
-
-.sts4-cache/
 
 ### Java ###
 # Compiled class file
@@ -99,5 +99,12 @@ hs_err_pid*
 ### Java-Web ###
 ## ignoring target file
 target/
+
+# Gradle
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**
+!**/src/test/**
 
 # End of https://www.gitignore.io/api/java,eclipse,java-web

@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM adoptopenjdk/openjdk11:latest
 LABEL maintainer="kikisp1@gmail.com"
 VOLUME /tmp
 ARG JAR_FILE=build/libs/CarWashAgent.jar

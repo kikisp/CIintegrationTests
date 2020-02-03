@@ -6,16 +6,16 @@ spring:
       show-sql: true
       open-in-view: false
       hibernate:
-         ddl-auto: create-drop
+         ddl-auto: none
       properties:
          hibernate.dialect: org.hibernate.dialect.PostgreSQL10Dialect
    datasource:
       hikari:
          connectionTimeout: 20000
          maximumPoolSize: 5
-      url: jdbc:postgresql://localhost:5432/backend?currentSchema=car_wash
-      username: postgres
-      password: root
+      url: jdbc:postgresql://database:5432/backend
+      username: mobile_app
+      password: KVxsf4SzHMA4Lgdm
               
 
 

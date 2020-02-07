@@ -4,9 +4,14 @@ plugins {
 	id 'java'
 }
 
-group = 'com.icbergarts'
+group = 'com.icebergarts'
 version = '0.0.1'
 sourceCompatibility = '11'
+targetCompatibility = '11'
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
 
 bootJar {
     archiveFileName = "${archiveBaseName.get()}.${archiveExtension.get()}"
@@ -35,9 +40,12 @@ dependencies {
 	// SPRING
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	// SECURITY
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-oauth2-client'
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	// POSTGRES & DB
 	runtimeOnly 'org.postgresql:postgresql'
 	implementation 'org.flywaydb:flyway-core'

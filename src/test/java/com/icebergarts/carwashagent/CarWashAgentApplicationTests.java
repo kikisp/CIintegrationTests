@@ -1,4 +1,4 @@
-package com.icbergarts.CarWashAgent;
+package com.icebergarts.carwashagent;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

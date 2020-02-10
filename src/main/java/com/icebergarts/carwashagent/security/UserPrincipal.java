@@ -8,19 +8,18 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import com.icebergarts.carwashagent.model.User;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class UserPrincipal implements OAuth2User, UserDetails {
     private UUID id;
     private String email;
     private String password;
-    private Collection<? extends GrantedAuthority> authorities;
+    private Collection<? extends SimpleGrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(UUID id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(UUID id, String email, String password, Collection<? extends SimpleGrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -28,8 +27,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     }
 
     public static UserPrincipal create(User user) {
-        List<GrantedAuthority> authorities = Collections.
-                singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        Set<SimpleGrantedAuthority> authorities = user.getRole().getGrantedAuthorities();
 
         return new UserPrincipal(
                 user.getId(),

@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import com.icebergarts.carwashagent.exception.OAuth2AuthenticationProcessingException;
 import com.icebergarts.carwashagent.model.AuthProvider;
+import com.icebergarts.carwashagent.model.RoleProvider;
 import com.icebergarts.carwashagent.model.User;
 import com.icebergarts.carwashagent.repository.UserRepository;
 import com.icebergarts.carwashagent.security.UserPrincipal;
@@ -71,6 +72,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setName(oAuth2UserInfo.getName());
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
+        user.setRole(RoleProvider.USER);
         return userRepository.save(user);
     }
 

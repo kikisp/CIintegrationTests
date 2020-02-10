@@ -36,13 +36,13 @@
 		</Logger>
 
 		<!-- Log everything in Hibernate -->
-		<Logger name="org.hibernate" level="debug" additivity="false">
+		<Logger name="org.hibernate" level="info" additivity="false">
 			<AppenderRef ref="File" />
 			<AppenderRef ref="Console" />
 		</Logger>
 
 		<!-- Log everything in Spring Boot -->
-		<Logger name="org.springframework.boot" level="debug" additivity="false">
+		<Logger name="org.springframework.boot" level="info" additivity="false">
 			<AppenderRef ref="File" />
 			<AppenderRef ref="Console" />
 		</Logger>

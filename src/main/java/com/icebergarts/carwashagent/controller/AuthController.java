@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.icebergarts.carwashagent.exception.BadRequestException;
 import com.icebergarts.carwashagent.model.AuthProvider;
+import com.icebergarts.carwashagent.model.RoleProvider;
 import com.icebergarts.carwashagent.model.User;
 import com.icebergarts.carwashagent.payload.ApiResponse;
 import com.icebergarts.carwashagent.payload.AuthResponse;
@@ -67,7 +68,10 @@ public class AuthController {
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(signUpRequest.getPassword());
         user.setProvider(AuthProvider.local);
-
+        if (signUpRequest.getRole() != null) {
+        	 user.setRole(RoleProvider.valueOf(signUpRequest.getRole()));
+		}
+       
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User result = userRepository.save(user);

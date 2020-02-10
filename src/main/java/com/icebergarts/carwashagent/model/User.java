@@ -38,6 +38,9 @@ public class User extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
+    
+    @Enumerated(EnumType.STRING)
+    private RoleProvider role;
 
     private String providerId;
     

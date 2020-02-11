@@ -1,20 +1,28 @@
 package com.icebergarts.carwashagent.security;
 
-import io.jsonwebtoken.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Date;
+import java.util.UUID;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.icebergarts.carwashagent.config.CarwashProperties;
 
-import java.util.Date;
-import java.util.UUID;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
+
 
 @Service
 public class TokenProvider {
 
-    private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
+    private static final Logger logger = LogManager.getLogger(TokenProvider.class);
 
     private CarwashProperties appProperties;
 
@@ -30,6 +38,7 @@ public class TokenProvider {
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getId().toString())
+                .claim("authorities",userPrincipal.getAuthorities())
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
@@ -44,7 +53,7 @@ public class TokenProvider {
 
         return UUID.fromString(claims.getSubject());
     }
-
+    
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(appProperties.getAuth().getTokenSecret()).parseClaimsJws(authToken);

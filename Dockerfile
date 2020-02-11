@@ -8,4 +8,5 @@ FROM adoptopenjdk/openjdk11:alpine
 LABEL maintainer="kikisp1@gmail.com"
 RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/app.jar
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+WORKDIR /app
+CMD ["java","-Djava.security.egd=file:/dev/./urandom","-jar","app.jar"]

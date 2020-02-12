@@ -9,4 +9,5 @@ LABEL maintainer="kikisp1@gmail.com"
 RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/app.jar
 WORKDIR /app
-CMD ["java","-Djava.security.egd=file:/dev/./urandom","-jar","app.jar"]
+ARG profile=prod
+CMD ["java","-Dspring.profiles.active=$profile","-Djava.security.egd=file:/dev/./urandom","-jar","app.jar"]

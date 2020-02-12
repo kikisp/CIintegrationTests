@@ -102,19 +102,9 @@ public class AuthController {
 
 		RegistrationToken registrationToken = new RegistrationToken(result.getId());
 		tokenService.saveToken(registrationToken);
-
-		SimpleMailMessage mailMessage = new SimpleMailMessage();
-		mailMessage.setTo(result.getEmail());
-		mailMessage.setSubject(messages.getMessage("mail.subject", null, locale));
-		mailMessage.setText(messages.getMessage("mail.text", null, locale)
-				+ washProperties.getAuth().getRegistrationVerificationApi() + registrationToken.getToken());
-		emailSenderService.sendEmail(mailMessage);
-
-		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/user/me")
-				.buildAndExpand(result.getId()).toUri();
-
-		return ResponseEntity.created(location)
-				.body(new ApiResponse(true, messages.getMessage("registration.success", null, locale)));
+		sendMail(registrationToken.getToken(), result.getEmail(), locale);
+		
+		return ResponseEntity.ok(new ApiResponse(true, messages.getMessage("registration.success", null, locale)));
 	}
 
 	@GetMapping("/confirm-account")
@@ -123,6 +113,8 @@ public class AuthController {
 
 		if (registrationToken != null) {
 			if (registrationToken.getExpiredTime().isBefore(LocalDateTime.now())) {
+				registrationToken.setStatus(RegistrationToken.STATUS_EXPIRED);
+				tokenService.saveToken(registrationToken);
 				return ResponseEntity.badRequest()
 						.body(new ApiResponse(false, messages.getMessage("token.expired", null, locale)));
 			}
@@ -133,11 +125,21 @@ public class AuthController {
 				userService.saveUser(user);
 				registrationToken.setStatus(RegistrationToken.STATUS_VERIFIED);
 				tokenService.saveToken(registrationToken);
+				return ResponseEntity.ok(new ApiResponse(true, messages.getMessage("user.verified ", null, locale)));
 
 			}
 		}
 		return ResponseEntity.badRequest()
 				.body(new ApiResponse(false, messages.getMessage("user.notfound", null, locale)));
 
+	}
+	
+	private void sendMail(String token,String recipient,Locale locale) {
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setTo(recipient);
+		mailMessage.setSubject(messages.getMessage("mail.subject", null, locale));
+		mailMessage.setText(messages.getMessage("mail.text", null, locale)
+				+ washProperties.getAuth().getRegistrationVerificationApi() + token);
+		emailSenderService.sendEmail(mailMessage);
 	}
 }

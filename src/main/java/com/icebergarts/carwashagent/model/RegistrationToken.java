@@ -18,6 +18,7 @@ public class RegistrationToken extends BaseEntity {
 	
 	public static final String STATUS_PENDING = "PENDING";
     public static final String STATUS_VERIFIED = "VERIFIED";
+    public static final String STATUS_EXPIRED = "EXPIRED";
     
     private UUID userId;
     private String token;

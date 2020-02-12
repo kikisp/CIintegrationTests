@@ -1,5 +1,10 @@
 package com.icebergarts.carwashagent.security;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,23 +12,20 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.icebergarts.carwashagent.model.User;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
 public class UserPrincipal implements OAuth2User, UserDetails {
     private UUID id;
     private String email;
     private String password;
+    private boolean enabled;
     private Collection<? extends SimpleGrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(UUID id, String email, String password, Collection<? extends SimpleGrantedAuthority> authorities) {
+    public UserPrincipal(UUID id, String email, String password, Collection<? extends SimpleGrantedAuthority> authorities,boolean enabled) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.enabled = enabled;
     }
 
     public static UserPrincipal create(User user) {
@@ -37,7 +39,8 @@ public class UserPrincipal implements OAuth2User, UserDetails {
                 user.getId(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities
+                authorities,
+                user.getEnabled() 
         );
     }
 
@@ -82,7 +85,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     @Override

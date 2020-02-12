@@ -31,6 +31,9 @@ public class User extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean emailVerified = false;
+    
+    @Column(nullable = false)
+    private Boolean enabled = false;
 
     @JsonIgnore
     private String password;

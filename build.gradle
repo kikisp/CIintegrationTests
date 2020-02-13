@@ -56,9 +56,9 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation("com.google.guava:guava:28.2-jre")
-	//SWAGGER
-    compileOnly 'io.springfox:springfox-swagger2:2.9.2'
-    compileOnly 'io.springfox:springfox-swagger-ui:2.9.2'
+	//DOC
+	implementation("org.springdoc:springdoc-openapi-ui:1.2.30")
+	implementation("org.springdoc:springdoc-openapi-security:1.2.30")
 	// TEST
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

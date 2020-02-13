@@ -1,6 +1,5 @@
 package com.icebergarts.carwashagent.controller;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Optional;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.icebergarts.carwashagent.config.CarwashProperties;
 import com.icebergarts.carwashagent.exception.BadRequestException;
@@ -103,7 +101,7 @@ public class AuthController {
 		RegistrationToken registrationToken = new RegistrationToken(result.getId());
 		tokenService.saveToken(registrationToken);
 		sendMail(registrationToken.getToken(), result.getEmail(), locale);
-		
+
 		return ResponseEntity.ok(new ApiResponse(true, messages.getMessage("registration.success", null, locale)));
 	}
 
@@ -122,6 +120,7 @@ public class AuthController {
 			if (userOptional.isPresent()) {
 				User user = userOptional.get();
 				user.setEnabled(true);
+				user.setEmailVerified(true);
 				userService.saveUser(user);
 				registrationToken.setStatus(RegistrationToken.STATUS_VERIFIED);
 				tokenService.saveToken(registrationToken);
@@ -133,8 +132,8 @@ public class AuthController {
 				.body(new ApiResponse(false, messages.getMessage("user.notfound", null, locale)));
 
 	}
-	
-	private void sendMail(String token,String recipient,Locale locale) {
+
+	private void sendMail(String token, String recipient, Locale locale) {
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setTo(recipient);
 		mailMessage.setSubject(messages.getMessage("mail.subject", null, locale));

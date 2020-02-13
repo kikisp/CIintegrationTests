@@ -10,4 +10,5 @@ RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/app.jar
 WORKDIR /app
 ARG profile=prod
-CMD ["java","-Dspring.profiles.active=$profile","-Djava.security.egd=file:/dev/./urandom","-jar","app.jar"]
+ENV profile_env ${profile}
+CMD ["java","-Dspring.profiles.active=${profile_env}","-Djava.security.egd=file:/dev/./urandom","-jar","app.jar"]

@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,8 @@ import com.icebergarts.carwashagent.service.UserService;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+	
+	 private static final Logger logger = LogManager.getLogger(AuthController.class);
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -79,6 +83,7 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	public ResponseEntity registerUser(@Valid @RequestBody SignUpRequest signUpRequest, Locale locale) {
+		logger.debug("REGISTERING USER");
 		boolean userExists = userService.existsByEmail(signUpRequest.getEmail());
 		if (userExists) {
 			throw new BadRequestException(messages.getMessage("mail.inuse", null, locale));

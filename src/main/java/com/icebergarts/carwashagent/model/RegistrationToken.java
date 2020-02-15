@@ -26,6 +26,9 @@ public class RegistrationToken extends BaseEntity {
     private LocalDateTime issuedTime;
     private LocalDateTime expiredTime;
     
+    public RegistrationToken() {
+    	
+	}
     
     public RegistrationToken(UUID userId){
     	this.userId = userId;

@@ -87,7 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.httpBasic().disable()
 		.exceptionHandling()
 		.authenticationEntryPoint(new RestAuthenticationEntryPoint()).and().authorizeRequests()
-		.antMatchers("/", "index", "/css/*", "/js/*").permitAll()
+		.antMatchers("/", "index","/actuator/**","/css/*", "/js/*").permitAll()
 		.antMatchers("/auth/**", "/oauth2/**", "/api/v1/info").permitAll()
 		.anyRequest().authenticated().and()
 		.oauth2Login().authorizationEndpoint().baseUri("/oauth2/authorize")

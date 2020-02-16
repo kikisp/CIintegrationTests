@@ -5,9 +5,6 @@ import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
-/**
- * Created by rajeevkumarsingh on 02/08/17.
- */
 @Data
 public class SignUpRequest {
     @NotBlank

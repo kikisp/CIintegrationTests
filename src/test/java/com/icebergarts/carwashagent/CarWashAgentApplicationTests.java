@@ -15,7 +15,7 @@ class CarWashAgentApplicationTests {
 
 	@Test
 	void contextLoads() {
-		assertEquals("Context loaded!", testString);
+		assertEquals(testString,"Context loaded!");
 	}
 
 }

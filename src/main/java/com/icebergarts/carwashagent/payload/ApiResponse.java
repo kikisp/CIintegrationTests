@@ -1,23 +1,24 @@
 package com.icebergarts.carwashagent.payload;
 
 public class ApiResponse {
-    private boolean success;
+    private boolean status;
     private String message;
 
-    public ApiResponse(boolean success, String message) {
-        this.success = success;
+    public ApiResponse(boolean status, String message) {
+        this.status = status;
         this.message = message;
     }
 
-    public boolean isSuccess() {
-        return success;
-    }
+    public boolean isStatus() {
+		return status;
+	}
 
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
 
-    public String getMessage() {
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public String getMessage() {
         return message;
     }
 

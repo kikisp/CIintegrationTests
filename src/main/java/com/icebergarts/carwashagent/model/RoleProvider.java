@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import static com.icebergarts.carwashagent.model.PermissionsProvider.*;
 
 public enum RoleProvider {
-    USER(Sets.newHashSet()),
+    USER(Sets.newHashSet(USER_READ)),
     ADMIN(Sets.newHashSet(USER_READ,USER_WRITE)),
     CLIENT(Sets.newHashSet(USER_READ));
 
@@ -24,10 +24,10 @@ public enum RoleProvider {
     }
 
     public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
-        Set<SimpleGrantedAuthority> permissions = getPermissions().stream()
+        Set<SimpleGrantedAuthority> permissionsList = getPermissions().stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
                 .collect(Collectors.toSet());
-        permissions.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
-        return permissions;
+        permissionsList.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+        return permissionsList;
     }
 }

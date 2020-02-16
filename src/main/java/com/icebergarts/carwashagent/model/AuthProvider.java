@@ -1,7 +1,7 @@
 package com.icebergarts.carwashagent.model;
 public enum  AuthProvider {
-    local,
-    facebook,
-    google,
-    github
+    LOCAL,
+    FACEBOOK,
+    GOOGLE,
+    GITHUB
 }

@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class CarwashProperties {
 	private final Auth auth = new Auth();
 	private final OAuth2 oauth2 = new OAuth2();
+	private final Properties properties = new Properties();
 
 	public static class Auth {
 		private String tokenSecret;
@@ -53,6 +54,20 @@ public class CarwashProperties {
 			return this;
 		}
 	}
+	
+	public static final class Properties{
+		private String mailSender;
+
+		public String getMailSender() {
+			return mailSender;
+		}
+
+		public void setMailSender(String mailSender) {
+			this.mailSender = mailSender;
+		}
+		
+		
+	}
 
 	public Auth getAuth() {
 		return auth;
@@ -60,5 +75,10 @@ public class CarwashProperties {
 
 	public OAuth2 getOauth2() {
 		return oauth2;
+	}
+	
+	public Properties getProperties() {
+		return properties;
+		
 	}
 }

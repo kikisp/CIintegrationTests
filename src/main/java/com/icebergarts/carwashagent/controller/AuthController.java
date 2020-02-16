@@ -17,15 +17,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.icebergarts.carwashagent.config.CarwashProperties;
-import com.icebergarts.carwashagent.exception.BadRequestException;
 import com.icebergarts.carwashagent.model.AuthProvider;
 import com.icebergarts.carwashagent.model.RegistrationToken;
 import com.icebergarts.carwashagent.model.RoleProvider;
@@ -70,7 +71,7 @@ public class AuthController {
 	private MessageSource messages;
 
 	@PostMapping("/login")
-	public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<AuthResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -82,11 +83,12 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity registerUser(@Valid @RequestBody SignUpRequest signUpRequest, Locale locale) {
+	public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody SignUpRequest signUpRequest, Locale locale) {
 		logger.debug("REGISTERING USER");
 		boolean userExists = userService.existsByEmail(signUpRequest.getEmail());
 		if (userExists) {
-			throw new BadRequestException(messages.getMessage("mail.inuse", null, locale));
+			return ResponseEntity.badRequest()
+					.body(new ApiResponse(false, messages.getMessage("mail.inuse", null, locale)));
 		}
 
 		// Creating user's account
@@ -94,11 +96,8 @@ public class AuthController {
 		user.setName(signUpRequest.getName());
 		user.setEmail(signUpRequest.getEmail());
 		user.setPassword(signUpRequest.getPassword());
-		user.setProvider(AuthProvider.local);
-		if (signUpRequest.getRole() != null) {
-			user.setRole(RoleProvider.valueOf(signUpRequest.getRole()));
-		}
-
+		user.setProvider(AuthProvider.LOCAL);
+		user.setRole(signUpRequest.getRole() != null ? RoleProvider.valueOf(signUpRequest.getRole()) : RoleProvider.USER);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 
 		User result = userService.saveUser(user);
@@ -110,40 +109,20 @@ public class AuthController {
 		return ResponseEntity.ok(new ApiResponse(true, messages.getMessage("registration.success", null, locale)));
 	}
 
-	@GetMapping("/confirm-account")
-	public ResponseEntity confirmRegistration(@RequestParam("token") String token, Locale locale) {
-		RegistrationToken registrationToken = tokenService.getByToken(token);
-
-		if (registrationToken != null) {
-			if (registrationToken.getExpiredTime().isBefore(LocalDateTime.now())) {
-				registrationToken.setStatus(RegistrationToken.STATUS_EXPIRED);
-				tokenService.saveToken(registrationToken);
-				return ResponseEntity.badRequest()
-						.body(new ApiResponse(false, messages.getMessage("token.expired", null, locale)));
-			}
-			Optional<User> userOptional = userService.getById(registrationToken.getUserId());
-			if (userOptional.isPresent()) {
-				User user = userOptional.get();
-				user.setEnabled(true);
-				user.setEmailVerified(true);
-				userService.saveUser(user);
-				registrationToken.setStatus(RegistrationToken.STATUS_VERIFIED);
-				tokenService.saveToken(registrationToken);
-				return ResponseEntity.ok(new ApiResponse(true, messages.getMessage("user.verified ", null, locale)));
-
-			}
-		}
-		return ResponseEntity.badRequest()
-				.body(new ApiResponse(false, messages.getMessage("user.notfound", null, locale)));
-
-	}
-
 	private void sendMail(String token, String recipient, Locale locale) {
+		
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
-		mailMessage.setTo(recipient);
-		mailMessage.setSubject(messages.getMessage("mail.subject", null, locale));
-		mailMessage.setText(messages.getMessage("mail.text", null, locale)
-				+ washProperties.getAuth().getRegistrationVerificationApi() + token);
-		emailSenderService.sendEmail(mailMessage);
+		try {
+			mailMessage.setFrom(washProperties.getProperties().getMailSender());
+			mailMessage.setTo(recipient);
+			mailMessage.setSubject(messages.getMessage("mail.subject", null, locale));
+			mailMessage.setText(messages.getMessage("mail.text", null, locale)
+					+ washProperties.getAuth().getRegistrationVerificationApi() + token);
+	
+			emailSenderService.sendEmail(mailMessage);
+		}catch (Exception e) {
+			logger.error("Mail sending error",e);
+		}
+		
 	}
 }

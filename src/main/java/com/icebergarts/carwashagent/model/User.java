@@ -44,8 +44,14 @@ public class User extends BaseEntity {
     
     @Enumerated(EnumType.STRING)
     private RoleProvider role;
-
+    
+    @JsonIgnore
     private String providerId;
+
+	@Override
+	public String toString() {
+		return "User [email=" + email + ", getId()=" + getId() + "]";
+	}
     
     
 

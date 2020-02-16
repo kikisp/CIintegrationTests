@@ -13,7 +13,10 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import com.icebergarts.carwashagent.model.User;
 
 public class UserPrincipal implements OAuth2User, UserDetails {
-    private UUID id;
+	
+	private static final long serialVersionUID = -6247574218168896940L;
+	
+	private UUID id;
     private String email;
     private String password;
     private boolean enabled;

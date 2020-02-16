@@ -41,9 +41,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
-	@Autowired
-	private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-
 	@Bean
 	public TokenAuthenticationFilter tokenAuthenticationFilter() {
 		return new TokenAuthenticationFilter();
@@ -88,7 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.exceptionHandling()
 		.authenticationEntryPoint(new RestAuthenticationEntryPoint()).and().authorizeRequests()
 		.antMatchers("/", "index","/actuator/**","/css/*", "/js/*").permitAll()
-		.antMatchers("/auth/**", "/oauth2/**", "/api/v1/info").permitAll()
+		.antMatchers("/auth/**", "/oauth2/**", "/api/v1/info", "/verification/**").permitAll()
 		.anyRequest().authenticated().and()
 		.oauth2Login().authorizationEndpoint().baseUri("/oauth2/authorize")
 		.authorizationRequestRepository(cookieAuthorizationRequestRepository()).and().redirectionEndpoint()
